@@ -1,0 +1,7 @@
+*.v
+*.json
+*.png
+*.log
+build
+obj_dir
+
