@@ -15,7 +15,7 @@ module ibex_demo_system #(
   parameter int                 GpiWidth       = 8,
   parameter int                 GpoWidth       = 16,
   parameter int                 PwmWidth       = 12,
-  parameter int unsigned        ClockFrequency = 50_000_000,
+  parameter int unsigned        ClockFrequency = 50_000_000, //50_000_000 für arty ich will nehme 25MHz
   parameter int unsigned        BaudRate       = 115_200,
   parameter ibex_pkg::regfile_e RegFile        = ibex_pkg::RegFileFPGA,
   parameter                     SRAMInitFile   = ""
@@ -38,7 +38,7 @@ module ibex_demo_system #(
   input  logic        td_i,     // JTAG test data input pad
   output logic        td_o      // JTAG test data output pad
 );
-  localparam logic [31:0] MEM_SIZE      = 128 * 1024; // 128 KiB
+  localparam logic [31:0] MEM_SIZE      =  16 * 1024; // davor 128*1024 =128 KiB wir testen 16 * 1024 = 16KiB
   localparam logic [31:0] MEM_START     = 32'h00100000;
   localparam logic [31:0] MEM_MASK      = ~(MEM_SIZE-1);
 

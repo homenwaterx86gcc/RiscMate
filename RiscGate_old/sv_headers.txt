@@ -1,0 +1,7 @@
+prim_assert.sv
+prim_flop_macros.sv
+prim_assert_dummy_macros.svh
+prim_assert_sec_cm.svh
+dv_fcov_macros.svh
+prim_util_memload.svh
+prim_util_get_scramble_params.svh

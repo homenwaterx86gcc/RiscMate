@@ -2,6 +2,7 @@
 *.json
 *.png
 *.log
+*.bit
 build
 obj_dir
 
