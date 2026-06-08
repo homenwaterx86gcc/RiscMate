@@ -13,12 +13,12 @@ module top_gatemate #(
   input         IO_RST_N,
   input  [ 1:0] SW,
   //input  [ 3:0] BTN, entfernt weil wir fürst erste keinen button brauchen
-  output [ 1:0] LED,
+  output [ 1:0] LED
   //PWM signal kommt weg
   //output [3:0] RGB_LED, //Davor output[11:0] reduziert
   //output [ 3:0] DISP_CTRL, brauchen wir auch nicht
-  input         UART_RX,
-  output        UART_TX
+ // input         UART_RX,
+ // output        UART_TX
  // input         SPI_RX, benutzen wir garnicht mehr
   //output        SPI_TX,
  // output        SPI_SCK
@@ -37,13 +37,13 @@ module top_gatemate #(
     .clk_sys_i (clk_sys),
     .rst_sys_ni(rst_sys_n),
     .gp_i      (SW), //Hier gabs davor noch den Button
-    .uart_rx_i (UART_RX),
+    //.uart_rx_i (UART_RX),
 
     //output
     .gp_o     (LED), //hier gabs davor DISP_CTRL
     //PWM benutzen wir nicht mehr
     //.pwm_o    (RGB_LED),
-    .uart_tx_o(UART_TX),
+    //.uart_tx_o(UART_TX),
 
     //.spi_rx_i (SPI_RX),
     //.spi_tx_o (SPI_TX),

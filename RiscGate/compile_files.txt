@@ -144,5 +144,4 @@ jtag_id_pkg.sv
 ibex_demo_system.sv
 debounce.sv
 gpio.sv
-uart.sv
 top_gatemate.sv
