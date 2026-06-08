@@ -1,21 +1,21 @@
-#Clock Signal 
+# Clock Signal
 Net "IO_CLK" Loc = IO_SB_A8;
-#Reset Signal 
+
+# Reset Signal
 Net "IO_RST_N" Loc = IO_SB_A0;
-#Switches 
-#LED 
-Net "LED[0]" Loc = IO_SA_A0; #GPIO0
-Net "LED[1]" Loc = IO_SA_B0; #GPIO1
-Net "LED[2]" Loc = IO_SA_A1; #GPIO2
-Net "LED[3]" Loc = IO_SA_B1; #GPIO3
 
-#RGB_LED 
+# Switches (4-bit input)
+Net "SW[0]" Loc = IO_SA_A0;
+Net "SW[1]" Loc = IO_SA_B0;
+Net "SW[2]" Loc = IO_SA_A1;
+Net "SW[3]" Loc = IO_SA_B1;
 
-#DISP_CTRL
+# LEDs (4-bit output)
+Net "LED[0]" Loc = IO_SA_A2;
+Net "LED[1]" Loc = IO_SA_B2;
+Net "LED[2]" Loc = IO_SA_A3;
+Net "LED[3]" Loc = IO_SA_B3;
 
-#UART
+# UART
 Net "UART_RX" Loc = IO_SA_B6;
-Net "UART_TX" Loc = IO_SA_A6; 
-
-#SPI
-
+Net "UART_TX" Loc = IO_SA_A6;

@@ -12,11 +12,11 @@
 // - Debug module.
 // - SPI for driving LCD screen.
 module ibex_demo_system #(
-  parameter int                 GpiWidth       = 8,
-  parameter int                 GpoWidth       = 16,
-  parameter int                 PwmWidth       = 12,
-  parameter int unsigned        ClockFrequency = 50_000_000, //50_000_000 für arty ich will nehme 25MHz
-  parameter int unsigned        BaudRate       = 115_200,
+  parameter int                 GpiWidth       = 4, //Davor 8 wegen routing reduziert
+  parameter int                 GpoWidth       = 4, //Davor 8 wegen routing reduziert
+  parameter int                 PwmWidth       = 4, //Davor 12 wegen routing reduziert
+  parameter int unsigned        ClockFrequency = 25_000_000, //50_000_000 für arty ich will nehme 25MHz
+  parameter int unsigned        BaudRate       = 19200, //Eigentlich 115200 wir probieren erstmal 19200
   parameter ibex_pkg::regfile_e RegFile        = ibex_pkg::RegFileFPGA,
   parameter                     SRAMInitFile   = ""
 ) (
@@ -38,18 +38,19 @@ module ibex_demo_system #(
   input  logic        td_i,     // JTAG test data input pad
   output logic        td_o      // JTAG test data output pad
 );
-  localparam logic [31:0] MEM_SIZE      =  16 * 1024; // davor 128*1024 =128 KiB wir testen 16 * 1024 = 16KiB
+  localparam logic [31:0] MEM_SIZE      =  8 * 1024; // davor 128*1024 =128 KiB wir testen 8 * 1024 = 16KiB
   localparam logic [31:0] MEM_START     = 32'h00100000;
   localparam logic [31:0] MEM_MASK      = ~(MEM_SIZE-1);
 
   localparam logic [31:0] GPIO_SIZE     =  4 * 1024; //  4 KiB
   localparam logic [31:0] GPIO_START    = 32'h80000000;
   localparam logic [31:0] GPIO_MASK     = ~(GPIO_SIZE-1);
-
+  //Debug logik brauchen wir auch nicht!
+  /*
   localparam logic [31:0] DEBUG_SIZE    = 64 * 1024; // 64 KiB
   localparam logic [31:0] DEBUG_START   = 32'h1a110000;
   localparam logic [31:0] DEBUG_MASK    = ~(DEBUG_SIZE-1);
-
+  */
   localparam logic [31:0] UART_SIZE     =  4 * 1024; //  4 KiB
   localparam logic [31:0] UART_START    = 32'h80001000;
   localparam logic [31:0] UART_MASK     = ~(UART_SIZE-1);
@@ -57,43 +58,53 @@ module ibex_demo_system #(
   localparam logic [31:0] TIMER_SIZE    =  4 * 1024; //  4 KiB
   localparam logic [31:0] TIMER_START   = 32'h80002000;
   localparam logic [31:0] TIMER_MASK    = ~(TIMER_SIZE-1);
-
-  localparam logic [31:0] PWM_SIZE      =  4 * 1024; //  4 KiB
-  localparam logic [31:0] PWM_START     = 32'h80003000;
-  localparam logic [31:0] PWM_MASK      = ~(PWM_SIZE-1);
-  localparam int PwmCtrSize = 8;
-
+  //Adressraum für PWM kommt weg
+  
+  //localparam logic [31:0] PWM_SIZE      =  4 * 1024; //  4 KiB
+  //localparam logic [31:0] PWM_START     = 32'h80003000;
+  //localparam logic [31:0] PWM_MASK      = ~(PWM_SIZE-1);
+  //localparam int PwmCtrSize = 8;
+  
+  //Ich entferne SPI erstmal vom Bus, brauche wir nicht !
+  /*
   parameter logic [31:0] SPI_SIZE       =  1 * 1024; //  1 KiB
   parameter logic [31:0] SPI_START      = 32'h80004000;
   parameter logic [31:0] SPI_MASK       = ~(SPI_SIZE-1);
-
+  */
   parameter logic [31:0] SIM_CTRL_SIZE  =  1 * 1024; //  1 KiB
   parameter logic [31:0] SIM_CTRL_START = 32'h20000;
   parameter logic [31:0] SIM_CTRL_MASK  = ~(SIM_CTRL_SIZE-1);
 
   // Debug functionality is optional.
-  localparam bit DBG = 1;
-  localparam int unsigned DbgHwBreakNum = (DBG == 1) ?    2 :    0;
-  localparam bit          DbgTriggerEn  = (DBG == 1) ? 1'b1 : 1'b0;
+  //localparam bit DBG = 0; //Wir wollen erstmal keinen Debug also setzen wir DBG auf 0 ,davor war es 1
+  ////localparam bit          DbgTriggerEn  = (DBG == 1) ? 1'b1 : 1'b0;
 
   typedef enum int {
-    CoreD,
-    DbgHost
+    CoreD
+    //Debug raus
+   // DbgHost
   } bus_host_e;
 
   typedef enum int {
     Ram,
     Gpio,
-    Pwm,
+    //Pwm benutzen wir auch nicht
+   // Pwm,
     Uart,
     Timer,
-    Spi,
-    SimCtrl,
-    DbgDev
+    //SPI hier auch entfernt
+    //Spi,
+    SimCtrl
+    //hier auch Debug raus
+    //DbgDev
   } bus_device_e;
-
-  localparam int NrDevices = DBG ? 8 : 7;
-  localparam int NrHosts   = DBG ? 2 : 1;
+  //Weil SPI und PWM entfernt wurde haben wir nurnoch 5 Devices ohne Debug, wir machen es aber konstant auf 5 weil wir keinen dbg brauchen
+  //localparam int NrDevices = DBG ? 6 : 5;
+  localparam int NrDevices = 5;
+  //localparam int NrDevices = DBG ? 8 : 7;
+  //localparam int NrHosts   = DBG ? 2 : 1; 
+  //Hier das selbe:
+  localparam int NrHosts   = 1;
 
   // Interrupts.
   logic timer_irq;
@@ -126,25 +137,25 @@ module ibex_demo_system #(
   logic        core_instr_rvalid;
   logic [31:0] core_instr_addr;
   logic [31:0] core_instr_rdata;
-  logic        core_instr_sel_dbg;
+  //logic        core_instr_sel_dbg;
 
   logic        mem_instr_req;
   logic [31:0] mem_instr_rdata;
-  logic        dbg_instr_req;
-
-  logic        dbg_device_req;
-  logic [31:0] dbg_device_addr;
-  logic        dbg_device_we;
-  logic [ 3:0] dbg_device_be;
-  logic [31:0] dbg_device_wdata;
-  logic        dbg_device_rvalid;
-  logic [31:0] dbg_device_rdata;
+  //logic        dbg_instr_req;
+  
+  //logic        dbg_device_req;
+  //logic [31:0] dbg_device_addr;
+  //logic        dbg_device_we;
+  //logic [ 3:0] dbg_device_be;
+  //logic [31:0] dbg_device_wdata;
+  //logic        dbg_device_rvalid;
+  //logic [31:0] dbg_device_rdata;
 
   // Internally generated resets cause IMPERFECTSCH warnings
   /* verilator lint_off IMPERFECTSCH */
   logic rst_core_n;
   logic ndmreset_req;
-  logic dm_debug_req;
+  //logic dm_debug_req;
 
   // Device address mapping.
   logic [31:0] cfg_device_addr_base [NrDevices];
@@ -154,29 +165,37 @@ module ibex_demo_system #(
   assign cfg_device_addr_mask[Ram]     = MEM_MASK;
   assign cfg_device_addr_base[Gpio]    = GPIO_START;
   assign cfg_device_addr_mask[Gpio]    = GPIO_MASK;
+  //Hier brauchen wir dann PWM auch nicht mehr:
+  /*
   assign cfg_device_addr_base[Pwm]     = PWM_START;
   assign cfg_device_addr_mask[Pwm]     = PWM_MASK;
+  */
   assign cfg_device_addr_base[Uart]    = UART_START;
   assign cfg_device_addr_mask[Uart]    = UART_MASK;
   assign cfg_device_addr_base[Timer]   = TIMER_START;
   assign cfg_device_addr_mask[Timer]   = TIMER_MASK;
+  //Hier brauchen wir dann SPI auch nicht mehr:
+  /*
   assign cfg_device_addr_base[Spi]     = SPI_START;
   assign cfg_device_addr_mask[Spi]     = SPI_MASK;
+  */
   assign cfg_device_addr_base[SimCtrl] = SIM_CTRL_START;
   assign cfg_device_addr_mask[SimCtrl] = SIM_CTRL_MASK;
-
+  /*
   if (DBG) begin : g_dbg_device_cfg
     assign cfg_device_addr_base[DbgDev] = DEBUG_START;
     assign cfg_device_addr_mask[DbgDev] = DEBUG_MASK;
     assign device_err[DbgDev] = 1'b0;
   end
-
+  */
   // Tie-off unused error signals.
   assign device_err[Ram]     = 1'b0;
   assign device_err[Gpio]    = 1'b0;
-  assign device_err[Pwm]     = 1'b0;
+  //Auch hier PWM entfernen
+  //assign device_err[Pwm]     = 1'b0;
   assign device_err[Uart]    = 1'b0;
-  assign device_err[Spi]     = 1'b0;
+  //SPI auch hier entfernen
+  //assign device_err[Spi]     = 1'b0;
   assign device_err[SimCtrl] = 1'b0;
 
   bus #(
@@ -213,35 +232,37 @@ module ibex_demo_system #(
 
   assign mem_instr_req =
       core_instr_req & ((core_instr_addr & cfg_device_addr_mask[Ram]) == cfg_device_addr_base[Ram]);
-
+  /*
   assign dbg_instr_req =
       core_instr_req & ((core_instr_addr & cfg_device_addr_mask[DbgDev]) == cfg_device_addr_base[DbgDev]);
+  */
 
-  assign core_instr_gnt = mem_instr_req | (dbg_instr_req & ~device_req[DbgDev]);
+  //assign core_instr_gnt = mem_instr_req | (dbg_instr_req & ~device_req[DbgDev]);
 
   always @(posedge clk_sys_i or negedge rst_sys_ni) begin
     if (!rst_sys_ni) begin
       core_instr_rvalid  <= 1'b0;
-      core_instr_sel_dbg <= 1'b0;
+      //core_instr_sel_dbg <= 1'b0;
     end else begin
       core_instr_rvalid  <= core_instr_gnt;
-      core_instr_sel_dbg <= dbg_instr_req;
+      //core_instr_sel_dbg <= dbg_instr_req;
     end
   end
 
-  assign core_instr_rdata = core_instr_sel_dbg ? dbg_device_rdata : mem_instr_rdata;
-
+  //assign core_instr_rdata = core_instr_sel_dbg ? dbg_device_rdata : mem_instr_rdata;
+  //Wir benutzen den debug nicht mehr
+  assign core_instr_rdata = mem_instr_rdata;
   assign rst_core_n = rst_sys_ni & ~ndmreset_req;
 
   ibex_top #(
     .RegFile         ( RegFile                                 ),
     .MHPMCounterNum  ( 10                                      ),
-    .RV32M           ( ibex_pkg::RV32MFast                     ),
-    .RV32B           ( ibex_pkg::RV32BNone                     ),
-    .DbgTriggerEn    ( DbgTriggerEn                            ),
-    .DbgHwBreakNum   ( DbgHwBreakNum                           ),
-    .DmHaltAddr      ( DEBUG_START + dm::HaltAddress[31:0]     ),
-    .DmExceptionAddr ( DEBUG_START + dm::ExceptionAddress[31:0])
+    .RV32M           ( ibex_pkg::RV32MNone                    ), //Davor RV32MFast
+    .RV32B           ( ibex_pkg::RV32BNone                     ), 
+    .DbgTriggerEn    ( 1'b0                            ), //Davor abhängig von bit DBG jetzt einfach 0
+    .DbgHwBreakNum   ( 1'b0                           )
+    //.DmHaltAddr      ( DEBUG_START + dm::HaltAddress[31:0]     ), Ignorieren wir erstmal
+    //.DmExceptionAddr ( DEBUG_START + dm::ExceptionAddress[31:0]) Ignorieren wir auch
   ) u_top (
     .clk_i (clk_sys_i),
     .rst_ni(rst_core_n),
@@ -285,7 +306,7 @@ module ibex_demo_system #(
     .scramble_nonce_i    ('0),
     .scramble_req_o      (),
 
-    .debug_req_i        (dm_debug_req),
+    .debug_req_i        (1'b0), //Setzen wir auch auf 0 davor abhängig von dm_debug_req
     .crash_dump_o       (),
     .double_fault_seen_o(),
 
@@ -338,7 +359,8 @@ module ibex_demo_system #(
     .gp_i,
     .gp_o
   );
-
+  //Kompletter PWM instanzierung raus
+  /*
   pwm_wrapper #(
     .PwmWidth     ( PwmWidth   ),
     .PwmCtrSize   ( PwmCtrSize ),
@@ -357,7 +379,7 @@ module ibex_demo_system #(
 
     .pwm_o
   );
-
+ */
   uart #(
     .ClockFrequency ( ClockFrequency ),
     .BaudRate       ( BaudRate       )
@@ -377,7 +399,8 @@ module ibex_demo_system #(
     .uart_irq_o     (uart_irq),
     .uart_tx_o
   );
-
+  //Komplettes SPI Modul kann raus:
+  /*
   spi_top #(
     .ClockFrequency ( ClockFrequency ),
     .CPOL           ( 0          ),
@@ -400,6 +423,7 @@ module ibex_demo_system #(
 
     .byte_data_o() // Unused.
   );
+  */
 
   `ifdef VERILATOR
     simulator_ctrl #(
@@ -436,6 +460,8 @@ module ibex_demo_system #(
     .timer_intr_o  (timer_irq)
   );
 
+  /*
+  debug zeug auch hier weg
   assign dbg_device_req        = device_req[DbgDev] | dbg_instr_req;
   assign dbg_device_we         = device_req[DbgDev] & device_we[DbgDev];
   assign dbg_device_addr       = device_req[DbgDev] ? device_addr[DbgDev] : core_instr_addr;
@@ -443,15 +469,17 @@ module ibex_demo_system #(
   assign dbg_device_wdata      = device_wdata[DbgDev];
   assign device_rvalid[DbgDev] = dbg_device_rvalid;
   assign device_rdata[DbgDev]  = dbg_device_rdata;
-
+  */
+  /*
   always @(posedge clk_sys_i or negedge rst_sys_ni) begin
     if (!rst_sys_ni) begin
-      dbg_device_rvalid <= 1'b0;
+      //dbg_device_rvalid <= 1'b0;
     end else begin
-      dbg_device_rvalid <= device_req[DbgDev];
+      //dbg_device_rvalid <= device_req[DbgDev];
     end
   end
-
+  */
+  /*
   if (DBG) begin : gen_dm_top
     dm_top #(
       .NrHarts      ( 1                              ),
@@ -493,7 +521,10 @@ module ibex_demo_system #(
     assign dm_debug_req = 1'b0;
     assign ndmreset_req = 1'b0;
   end
-
+  */
+  //Fügen wir hier ein 
+    assign dm_debug_req = 1'b0;
+    assign ndmreset_req = 1'b0;
   `ifdef VERILATOR
 
     export "DPI-C" function mhpmcounter_num;
