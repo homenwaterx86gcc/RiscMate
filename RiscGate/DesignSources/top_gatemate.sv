@@ -11,9 +11,9 @@ module top_gatemate #(
   // In unserem Falle in pin_constraints.ccf 
   input         IO_CLK,
   input         IO_RST_N,
-  input  [ 3:0] SW,
+  input  [ 1:0] SW,
   //input  [ 3:0] BTN, entfernt weil wir fürst erste keinen button brauchen
-  output [ 3:0] LED,
+  output [ 1:0] LED,
   //PWM signal kommt weg
   //output [3:0] RGB_LED, //Davor output[11:0] reduziert
   //output [ 3:0] DISP_CTRL, brauchen wir auch nicht
@@ -27,8 +27,8 @@ module top_gatemate #(
   assign rst_sys_n = IO_RST_N;
   // Instantiating the Ibex Demo System.
   ibex_demo_system #(
-    .GpiWidth     ( 4            ), //Davor 8 wegen routing reduziert
-    .GpoWidth     ( 4            ), //Davor 8 wegen routing reduziert
+    .GpiWidth     ( 2            ), //Davor 8 wegen routing reduziert
+    .GpoWidth     ( 2            ), //Davor 8 wegen routing reduziert
     //.PwmWidth     ( 4           ), //Davor 12 wegen routing reduziert Wir benutzen den PWM aber garnicht
     .SRAMInitFile ( SRAMInitFile )
   ) u_ibex_demo_system (
