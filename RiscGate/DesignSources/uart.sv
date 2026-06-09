@@ -5,8 +5,8 @@
 module uart #(
   parameter int unsigned ClockFrequency = 50_000_000,
   parameter int unsigned BaudRate       = 115_200,
-  parameter int unsigned RxFifoDepth    = 8, //davor 128
-  parameter int unsigned TxFifoDepth    = 8, //davor 128
+  parameter int unsigned RxFifoDepth    = 2, //davor 128, dann 8; auf 2 für GateMate routing
+  parameter int unsigned TxFifoDepth    = 2, //davor 128, dann 8; auf 2 für GateMate routing
   parameter int unsigned AddrWidth      = 32,
   parameter int unsigned DataWidth      = 32,
   parameter int unsigned RegAddr        = 12

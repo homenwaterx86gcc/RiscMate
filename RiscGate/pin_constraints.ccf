@@ -1,21 +1,18 @@
-# Clock Signal
-Net "IO_CLK" Loc = IO_SB_A8;
+# Olimex GateMateA1-EVB (CCGM1A1) pin constraints.
+# Verified against ibex-demo-system/data/pins_gatemate.ccf,
+# gatemate-olimex-playground examples, and the board schematic.
+# Net names must match top_gatemate port names exactly.
 
-# Reset Signal
-Net "IO_RST_N" Loc = IO_SB_A0;
+# 10 MHz onboard oscillator
+Net "IO_CLK"  Loc = IO_SB_A8;
 
-# Switches (4-bit input)
-Net "SW[0]" Loc = IO_SA_A0;
-Net "SW[1]" Loc = IO_SA_B0;
-Net "SW[2]" Loc = IO_SA_A1;
-Net "SW[3]" Loc = IO_SA_B1;
+# Debug UART, hardwired to the host through the onboard RP2040 (USB CDC-ACM).
+# Directions are from the FPGA's point of view (rx in, tx out).
+Net "UART_RX" Loc = IO_SA_A6;
+Net "UART_TX" Loc = IO_SA_B6;
 
-# LEDs (4-bit output)
-Net "LED[0]" Loc = IO_SA_A2;
-Net "LED[1]" Loc = IO_SA_B2;
-Net "LED[2]" Loc = IO_SA_A3;
-Net "LED[3]" Loc = IO_SA_B3;
+# Single user LED (active low: drive low to light).
+Net "LED[0]"  Loc = IO_SB_B6;
 
-# UART
-Net "UART_RX" Loc = IO_SA_B6;
-Net "UART_TX" Loc = IO_SA_A6;
+# The board has no user buttons and reset is internal, so IO_RST_N is left
+# unconstrained. LED[1..3] and SW[0..3] are unconstrained too (no board pins).

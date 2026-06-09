@@ -256,7 +256,7 @@ module ibex_demo_system #(
 
   ibex_top #(
     .RegFile         ( RegFile                                 ),
-    .MHPMCounterNum  ( 10                                      ),
+    .MHPMCounterNum  ( 0                                       ), //davor 10; 0 für GateMate routing slim
     .RV32M           ( ibex_pkg::RV32MNone                    ), //Davor RV32MFast
     .RV32B           ( ibex_pkg::RV32BNone                     ), 
     .DbgTriggerEn    ( 1'b0                            ), //Davor abhängig von bit DBG jetzt einfach 0
