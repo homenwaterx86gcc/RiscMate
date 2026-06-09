@@ -12,7 +12,7 @@ clean:
 	rm *.log *.png *.v *.json impl.txt impl.bit
 
 implement:
-	nextpnr-himbaechel -l routing.log --device=CCGM1A1 --vopt allow-unconstrained --json $(TOP)_synth_final.json -o ccf=pin_constraints.ccf -o out=impl.txt --sdc timing_constraints.sdc --router router2
+	nextpnr-himbaechel -l routing.log --device=CCGM1A1 --vopt allow-unconstrained --json $(TOP)_synth_final.json -o ccf=pin_constraints.ccf -o out=impl.txt --sdc timing_constraints.sdc --router router2 --gui
 
 bitfile:
 	gmpack impl.txt impl.bit
