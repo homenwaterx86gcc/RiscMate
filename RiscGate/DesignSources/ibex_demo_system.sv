@@ -12,11 +12,11 @@
 // - Debug module.
 // - SPI for driving LCD screen.
 module ibex_demo_system #(
-  parameter int                 GpiWidth       = 2, //Davor 8 wegen routing reduziert
-  parameter int                 GpoWidth       = 2, //Davor 8 wegen routing reduziert
+  parameter int                 GpiWidth       = 1, //Davor 8 wegen routing reduziert
+  parameter int                 GpoWidth       = 1, //Davor 8 wegen routing reduziert
   parameter int                 PwmWidth       = 0, //Davor 12 wegen routing reduziert
-  parameter int unsigned        ClockFrequency = 1_000_000, //50_000_000 für arty ich will nehme 25MHz
-  parameter int unsigned        BaudRate       = 115200, //Eigentlich 115200 wir probieren erstmal 19200
+  parameter int unsigned        ClockFrequency = 100000, //50_000_000 für arty ich will nehme 25MHz
+  parameter int unsigned        BaudRate       = 9600, //Eigentlich 115200 wir probieren erstmal 19200
   parameter ibex_pkg::regfile_e RegFile        = ibex_pkg::RegFileFPGA,
   parameter                     SRAMInitFile   = ""
 ) (
@@ -39,7 +39,7 @@ module ibex_demo_system #(
   input  logic        td_i,     // JTAG test data input pad
   output logic        td_o      // JTAG test data output pad
 );
-  localparam logic [31:0] MEM_SIZE      =  8 * 1024; // davor 128*1024 =128 KiB wir testen 8 * 1024 = 16KiB
+  localparam logic [31:0] MEM_SIZE      =  4 * 1024; // davor 128*1024 =128 KiB wir testen 4 * 1024 = 4KiB
   localparam logic [31:0] MEM_START     = 32'h00100000;
   localparam logic [31:0] MEM_MASK      = ~(MEM_SIZE-1);
 

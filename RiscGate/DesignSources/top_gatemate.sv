@@ -27,8 +27,8 @@ module top_gatemate #(
   assign rst_sys_n = IO_RST_N;
   // Instantiating the Ibex Demo System.
   ibex_demo_system #(
-    .GpiWidth     ( 2            ), //Davor 8 wegen routing reduziert
-    .GpoWidth     ( 2            ), //Davor 8 wegen routing reduziert
+    .GpiWidth     ( 1            ), //Davor 8 wegen routing reduziert
+    .GpoWidth     ( 1            ), //Davor 8 wegen routing reduziert
     //.PwmWidth     ( 4           ), //Davor 12 wegen routing reduziert Wir benutzen den PWM aber garnicht
     .SRAMInitFile ( SRAMInitFile )
   ) u_ibex_demo_system (

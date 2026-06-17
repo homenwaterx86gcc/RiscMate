@@ -2,20 +2,20 @@
 Net "IO_CLK" Loc = IO_SB_A8;
 
 # Reset Signal
-Net "IO_RST_N" Loc = IO_SB_A0;
+#Net "IO_RST_N" Loc = IO_SB_A0;
 
 # Switches (4-bit input)
-Net "SW[0]" Loc = IO_SA_A0;
-Net "SW[1]" Loc = IO_SA_B0;
-Net "SW[2]" Loc = IO_SA_A1;
-Net "SW[3]" Loc = IO_SA_B1;
+#Net "SW[0]" Loc = IO_SA_A0;
+#Net "SW[1]" Loc = IO_SA_B0;
+#Net "SW[2]" Loc = IO_SA_A1;
+#Net "SW[3]" Loc = IO_SA_B1;
 
 # LEDs (4-bit output)
-Net "LED[0]" Loc = IO_SA_A2;
-Net "LED[1]" Loc = IO_SA_B2;
-Net "LED[2]" Loc = IO_SA_A3;
-Net "LED[3]" Loc = IO_SA_B3;
+#Net "LED[0]" Loc = IO_SA_A2;
+#Net "LED[1]" Loc = IO_SA_B2;
+#Net "LED[2]" Loc = IO_SA_A3;
+#Net "LED[3]" Loc = IO_SA_B3;
 
 # UART
-Net "UART_RX" Loc = IO_SA_B6;
-Net "UART_TX" Loc = IO_SA_A6;
+#Net "UART_RX" Loc = IO_SA_B6;
+#Net "UART_TX" Loc = IO_SA_A6;
