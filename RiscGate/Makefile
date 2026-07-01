@@ -12,7 +12,12 @@ clean:
 	rm *.log *.png *.v *.json impl.txt impl.bit
 
 implement:
-	nextpnr-himbaechel -l routing.log --device=CCGM1A1 --vopt allow-unconstrained --json $(TOP)_synth_final.json -o ccf=pin_constraints.ccf -o out=impl.txt --sdc timing_constraints.sdc --router router2 --gui
+	nextpnr-himbaechel -l routing.log --device=CCGM1A1 --vopt allow-unconstrained --json $(TOP)_synth_final.json -o ccf=pin_constraints.ccf -o out=impl.txt --sdc timing_constraints.sdc --router router2 --seed 2
+
+# Same as implement but opens the nextpnr GUI. QT_QPA_PLATFORM=xcb forces XWayland
+# (the OSS CAD Suite Qt has no Wayland plugin, so the window won't show otherwise).
+gui:
+	QT_QPA_PLATFORM=xcb nextpnr-himbaechel --device=CCGM1A1 --vopt allow-unconstrained --json $(TOP)_synth_final.json -o ccf=pin_constraints.ccf --sdc timing_constraints.sdc --router router2 --seed 2 --gui
 
 bitfile:
 	gmpack impl.txt impl.bit

@@ -24,7 +24,17 @@ module top_gatemate #(
  // output        SPI_SCK
 );
   logic clk_sys, rst_sys_n;
-  assign rst_sys_n = IO_RST_N;
+
+  // Power-on reset (POR): the Olimex GateMateA1-EVB has no reset button and
+  // IO_RST_N is not wired to a board pad, so reset is generated internally.
+  // The counter starts at 0 at configuration (GateMate FF init) and holds
+  // rst_sys_n low for 128 clk_sys cycles, then releases and saturates.
+  // IO_RST_N is intentionally left unused.
+  logic [7:0] por_cnt = 8'd0;
+  always @(posedge clk_sys) begin
+    if (!por_cnt[7]) por_cnt <= por_cnt + 8'd1;
+  end
+  assign rst_sys_n = por_cnt[7];
   // Instantiating the Ibex Demo System.
   ibex_demo_system #(
     .GpiWidth     ( 4            ), //Davor 8 wegen routing reduziert

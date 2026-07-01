@@ -15,7 +15,7 @@ module ibex_demo_system #(
   parameter int                 GpiWidth       = 4, //Davor 8 wegen routing reduziert
   parameter int                 GpoWidth       = 4, //Davor 8 wegen routing reduziert
   parameter int                 PwmWidth       = 4, //Davor 12 wegen routing reduziert
-  parameter int unsigned        ClockFrequency = 50_000_000, //50_000_000 für arty ich will nehme 25MHz
+  parameter int unsigned        ClockFrequency = 10_000_000, // Olimex GateMateA1-EVB: 10 MHz onboard oscillator
   parameter int unsigned        BaudRate       = 115200, //Eigentlich 115200 wir probieren erstmal 19200
   parameter ibex_pkg::regfile_e RegFile        = ibex_pkg::RegFileFPGA,
   parameter                     SRAMInitFile   = ""
