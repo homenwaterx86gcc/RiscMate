@@ -21,7 +21,8 @@ gui:
 
 bitfile:
 	gmpack impl.txt impl.bit
-
+flash:
+	openFPGALoader -b olimex_gatemateevb impl.bit
 clk_test:
 	yosys -p "read_verilog -sv DesignSources/clkgen_gatemate.sv; synth_gatemate -top clkgen_gatemate -luttree -nomx8; write_verilog clkgen_gatemate_synth.v; write_json clkgen_gatemate_final_synth.json"  
 
