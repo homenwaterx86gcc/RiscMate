@@ -8,8 +8,8 @@ Net "IO_CLK"  Loc = IO_SB_A8;
 
 # Debug UART, hardwired to the host through the onboard RP2040 (USB CDC-ACM).
 # Directions are from the FPGA's point of view (rx in, tx out).
-#Net "UART_RX" Loc = IO_SA_A6;
-#Net "UART_TX" Loc = IO_SA_B6;
+Net "UART_RX" Loc = IO_SA_A6;
+Net "UART_TX" Loc = IO_SA_B6;
 
 # Single user LED (active low: drive low to light).
 Net "LED[0]"  Loc = IO_SB_B6;

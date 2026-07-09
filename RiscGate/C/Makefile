@@ -1,13 +1,17 @@
 COMPILER = riscv32-unknown-elf-gcc
 FLAGS = -march=rv32imac_zicsr_zifencei -mabi=ilp32 -nostdlib -Wall -Wextra
-
+light:
+	$(COMPILER) $(FLAGS) -c startup.S -o startup.o
+	$(COMPILER) $(FLAGS) -c main.c -o main.o
+	$(COMPILER) $(FLAGS) -T link.ld startup.o main.o -o firmware.elf
+	riscv32-unknown-elf-objcopy -O ihex firmware.elf firmware.hex
 all: firmware.bin
 
 firmware.bin:firmware.elf
 	riscv32-unknown-elf-objcopy -O ihex firmware.elf firmware.hex
 
 firmware.elf: main.o startup.o uart.o demo_system.o
-	$(COMPILER) $(FLAGS) -T link.ld startup.o uart.o demo_system.o main.o -o firmware.elf
+	$(COMPILER) $(FLAGS) -Wl,-Map=firmware.map -T link.ld startup.o uart.o demo_system.o main.o -o firmware.elf
 
 main.o: main.c 
 	$(COMPILER) $(FLAGS) -c main.c -o main.o
@@ -22,7 +26,7 @@ uart.o: uart.c
 demo_system.o: demo_system.c
 	$(COMPILER) $(FLAGS) -c demo_system.c -o demo_system.o
 clean:
-	rm main.o firmware.elf *.fst *.log *.csv *.o *.elf *.bin
+	rm main.o firmware.elf *.fst *.log *.csv *.o *.elf *.bin *.hex *.map
 
 objdump:
 	riscv32-unknown-elf-objdump -d firmware.elf
