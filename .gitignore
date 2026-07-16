@@ -5,3 +5,15 @@
 build
 obj_dir
 
+
+# firmware build artifacts
+RiscGate/C/*.o
+RiscGate/C/*.elf
+RiscGate/C/*.bin
+RiscGate/C/*.map
+# generated flow outputs (keep the .gitkeep placeholders)
+RiscGate/Impl/*.txt
+RiscGate/Impl/*.bit
+RiscGate/Synth/*
+RiscGate/Logs/*
+!RiscGate/*/.gitkeep

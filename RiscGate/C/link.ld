@@ -8,12 +8,12 @@ MEMORY
 {
     /* 124 KiB should be enough for anybody... */
     /*Xaver: Ich ändere die size hier weil ich sie in sv code geändert habe*/
-    ram         : ORIGIN = 0x00100000, LENGTH = 0x2000 /* 124 KiB --> 0x1E000, 8 KiB -> 0x2000 */
-    stack       : ORIGIN = 0x0011E000, LENGTH = 0x02000 /*   4 KiB --> 0x02000, 1kiB stack -> 0x400*/
+    ram         : ORIGIN = 0x00100000, LENGTH = 0x1800 /* 6 KiB for code/data/bss (RAM is 8 KiB total) */
+    stack       : ORIGIN = 0x00101800, LENGTH = 0x0800 /* 2 KiB stack at the top of the 8 KiB RAM */
 }
 
 /* Stack information variables */
-_min_stack      = 0x1000;   /* 4K - minimum stack space to reserve */
+_min_stack      = 0x0400;   /* 1K - minimum stack space to reserve */
 _stack_len     = LENGTH(stack);
 _stack_start   = ORIGIN(stack) + LENGTH(stack);
 

@@ -12,18 +12,18 @@ clean:
 	rm Logs/*.log *.png Synth/*.v Synth/*.json Impl/*.txt Impl/*.bit
 
 implement:
-	nextpnr-himbaechel -l Logs/routing.log --device=CCGM1A1 --vopt allow-unconstrained --json Synth/$(TOP)_synth_final.json -o ccf=Constraints/pin_constraints.ccf -o out=Impl/impl.txt --sdc Constraints/timing_constraints.sdc --router router2 --seed 2
+	nextpnr-himbaechel -l Logs/routing.log --device=CCGM1A1 --vopt allow-unconstrained --json Synth/$(TOP)_synth_final.json -o ccf=Constraints/pin_constraints.ccf -o out=Impl/impl.txt --sdc Constraints/timing_constraints.sdc --router router2 --seed 1
 
 # Same as implement but opens the nextpnr GUI. QT_QPA_PLATFORM=xcb forces XWayland
 # (the OSS CAD Suite Qt has no Wayland plugin, so the window won't show otherwise).
 gui:
-	QT_QPA_PLATFORM=xcb nextpnr-himbaechel --device=CCGM1A1 --vopt allow-unconstrained --json $(TOP)_synth_final.json -o ccf=pin_constraints.ccf --sdc timing_constraints.sdc --router router2 --seed 2 --gui
+	QT_QPA_PLATFORM=xcb nextpnr-himbaechel --device=CCGM1A1 --vopt allow-unconstrained --json Synth/$(TOP)_synth_final.json -o ccf=Constraints/pin_constraints.ccf --sdc Constraints/timing_constraints.sdc --router router2 --seed 1 --gui
 
 bitfile:
 	gmpack Impl/impl.txt Impl/impl.bit
-#Bus 001 Device 017: ID 1209:c0ca Generic Jean THOMAS DirtyJTAG
-#flash:
-#	sudo ./home/toolchains/oss-cad-suite-linux-x64-20260606/oss-cad-suite/bin/openFPGALoader -c dirtyJtag impl.bit
+# Flash the bitstream to the Olimex GateMateA1-EVB over the onboard RP2040/DirtyJTAG.
+flash:
+	openFPGALoader -b olimex_gatemateevb Impl/impl.bit
 clk_test:
 	yosys -p "read_verilog -sv DesignSources/clkgen_gatemate.sv; synth_gatemate -top clkgen_gatemate -luttree -nomx8; write_verilog clkgen_gatemate_synth.v; write_json clkgen_gatemate_final_synth.json"  
 

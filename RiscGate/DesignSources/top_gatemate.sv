@@ -40,7 +40,7 @@ module top_gatemate #(
     .GpiWidth     ( 1            ), //Davor 8 wegen routing reduziert
     .GpoWidth     ( 1            ), //Davor 8 wegen routing reduziert
     //.PwmWidth     ( 4           ), //Davor 12 wegen routing reduziert Wir benutzen den PWM aber garnicht
-    .SRAMInitFile ( "/home/xaver/FPGA_Projects/Ibex_new_try/RiscMate/RiscGate/C/firmware.hex" )
+    .SRAMInitFile ( "firmware" ) // any non-empty string enables the baked-in image (C/firmware_mem_init.svh; see prim_generic_ram_2p.sv)
   ) u_ibex_demo_system (
     //input
     //Hier reichen wir direkt IO_CLK und IO_RST_N durch anstatt clk_sys und rst_sys_n
