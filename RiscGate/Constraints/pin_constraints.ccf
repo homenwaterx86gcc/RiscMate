@@ -1,21 +1,11 @@
-# Clock Signal
-Net "IO_CLK" Loc = IO_SB_A8;
+# Olimex GateMateA1-EVB (CCGM1A1) pin constraints.
+# Net names must match the top_gatemate port names.
 
-# Reset Signal
-#Net "IO_RST_N" Loc = IO_SB_A0;
+# 10 MHz on-board oscillator
+Pin_in  "IO_CLK"  Loc = "IO_SB_A8" | SCHMITT_TRIGGER=true;
 
-# Switches (4-bit input)
-#Net "SW[0]" Loc = IO_SA_A0;
-#Net "SW[1]" Loc = IO_SA_B0;
-#Net "SW[2]" Loc = IO_SA_A1;
-#Net "SW[3]" Loc = IO_SA_B1;
+# The single user LED (active low: drive low to light it).
+Pin_out "LED[0]"  Loc = "IO_SB_B6";
 
-# LEDs (4-bit output)
-#Net "LED[0]" Loc = IO_SA_A2;
-#Net "LED[1]" Loc = IO_SA_B2;
-#Net "LED[2]" Loc = IO_SA_A3;
-#Net "LED[3]" Loc = IO_SA_B3;
-
-# UART
-#Net "UART_RX" Loc = IO_SA_B6;
-#Net "UART_TX" Loc = IO_SA_A6;
+# LED[1] and SW[1:0] have no dedicated pads on this board; they stay
+# unconstrained and are placed automatically (--vopt allow-unconstrained).

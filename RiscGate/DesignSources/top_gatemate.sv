@@ -45,7 +45,7 @@ module top_gatemate #(
     .clk_sys_i (clk_sys),
     .rst_sys_ni(rst_sys_n),
     .gp_i      (SW), //Hier gabs davor noch den Button
-    //.uart_rx_i (UART_RX),
+    .uart_rx_i (1'b1),   // idle high - port must be driven
 
     //output
     .gp_o     (LED), //hier gabs davor DISP_CTRL
@@ -53,7 +53,7 @@ module top_gatemate #(
     //.pwm_o    (RGB_LED),
     //.uart_tx_o(UART_TX),
 
-    //.spi_rx_i (SPI_RX),
+    .spi_rx_i  (1'b0),   // unused, but must be driven
     //.spi_tx_o (SPI_TX),
     //.spi_sck_o(SPI_SCK),
 
