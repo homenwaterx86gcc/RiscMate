@@ -65,19 +65,14 @@ module top_gatemate #(
   );
 
   //hier ein input-buffer für die clock
-  CC_IBUF #(
-  .PIN_NAME("IO_SB_A8"),
-  .V_IO("1.8"),
-  .PULLUP(0),
-  .PULLDOWN(0),
-  .KEEPER(0),
-  .SCHMITT_TRIGGER(0),
-  .DELAY_IBF(4'd0),
-  .FF_IBF(1'b0)
-  ) ibuf_inst_clk (
-  .I(IO_CLK),
-  .Y(clk_sys)
-);
+  // Clock input: drive clk_sys straight from the pad. The pad buffer is
+  // configured by the CCF (Pin_in ... | SCHMITT_TRIGGER=true) and nextpnr
+  // promotes this net to the global clock network.
+  // NOTE: the previous hand-instantiated CC_IBUF forced V_IO("1.8") and
+  // SCHMITT_TRIGGER(0), which is the wrong I/O standard for this board's
+  // oscillator - the clock did not reach the fabric reliably.
+  assign clk_sys = IO_CLK;
+
 /*
 Vielleicht input buffern wir später auch den reset
   CC_IBUF #(
