@@ -7,12 +7,12 @@ OUTPUT_ARCH(riscv)
 MEMORY
 {
     /* 124 KiB should be enough for anybody... */
-    ram         : ORIGIN = 0x00100000, LENGTH = 0x1E000 /* 124 KiB */
-    stack       : ORIGIN = 0x0011E000, LENGTH = 0x02000 /*   4 KiB */
+    ram         : ORIGIN = 0x00100000, LENGTH = 0x0C00  /* 3 KiB code/data/bss - must fit MEM_SIZE in ibex_demo_system.sv (4 KiB) */
+    stack       : ORIGIN = 0x00100C00, LENGTH = 0x0400  /* 1 KiB stack, top of the same 4 KiB RAM */
 }
 
 /* Stack information variables */
-_min_stack      = 0x1000;   /* 4K - minimum stack space to reserve */
+_min_stack      = 0x400;    /* 1K - must fit the stack region below */
 _stack_len     = LENGTH(stack);
 _stack_start   = ORIGIN(stack) + LENGTH(stack);
 
