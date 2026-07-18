@@ -26,3 +26,10 @@ clean:
 
 objdump:
 	riscv32-unknown-elf-objdump -d firmware.elf
+
+# Firmware image for synthesis: bake the .bin into a SystemVerilog array
+# initializer that the RAM picks up (yosys-slang cannot do $readmemh).
+../DesignSources/firmware_mem_init.svh: firmware.bin bin2svh.py
+	python3 bin2svh.py firmware.bin $@
+
+svh: ../DesignSources/firmware_mem_init.svh

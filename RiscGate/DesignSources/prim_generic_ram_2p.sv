@@ -52,7 +52,12 @@ module prim_generic_ram_2p import prim_ram_2p_pkg::*; #(
   // to be the full bit mask.
   localparam int MaskWidth = Width / DataBitsPerMask;
 
-  logic [Width-1:0]     mem [Depth];
+  // Firmware baked in at synthesis time. yosys-slang cannot do $readmemh, and
+  // the flow runs with --ignore-initial - but a DECLARATION initializer survives
+  // both. Only the instance with a non-empty MemInitFile (the SRAM) is loaded.
+  logic [Width-1:0]     mem [Depth] =
+      (MemInitFile != "") ? `include "firmware_mem_init.svh"
+                          : '{default: '0};
   logic [MaskWidth-1:0] a_wmask;
   logic [MaskWidth-1:0] b_wmask;
 

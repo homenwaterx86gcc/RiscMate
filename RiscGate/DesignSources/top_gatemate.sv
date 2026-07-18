@@ -5,7 +5,7 @@
 // This is the top level SystemVerilog file that connects the IO on the board to the Ibex Demo System.
 //Wir lassen das alles erstmal auf 25MHz laufen, was auch die Clock von Olimex Board ist
 module top_gatemate #(
-  parameter SRAMInitFile = ""
+  parameter SRAMInitFile = "firmware_mem_init.svh"
 ) (
   // These inputs are defined in data/pins_artya7.xdc
   // In unserem Falle in pin_constraints.ccf 
