@@ -244,7 +244,10 @@ module ibex_demo_system #(
       core_instr_req & ((core_instr_addr & cfg_device_addr_mask[DbgDev]) == cfg_device_addr_base[DbgDev]);
   */
 
-  //assign core_instr_gnt = mem_instr_req | (dbg_instr_req & ~device_req[DbgDev]);
+  // Was commented out together with the debug-module block, which left
+  // core_instr_gnt undriven: the first instruction fetch was never granted and
+  // the core stalled at boot. Debug device is gone, so grant = RAM instr req.
+  assign core_instr_gnt = mem_instr_req;
 
   always @(posedge clk_sys_i or negedge rst_sys_ni) begin
     if (!rst_sys_ni) begin
