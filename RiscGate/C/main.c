@@ -1,7 +1,10 @@
 #include "gpio.h"
 //Versuche LED zu blinken
 #define GPIO_BASE_ADDRESS 0x80000000
-#define CLK_SPEED 100000
+// Inner loop iterations per "ms". The volatile counter costs ~10 cycles per
+// iteration, so at 10 MHz ~1000 iterations ~= 1 ms. The previous value (100000)
+// made one "ms" ~100 ms, i.e. ~100 s per half period - the LED looked dead.
+#define CLK_SPEED 1000
 int main(void){
     volatile uint32_t* pointer_to_gpio = (volatile uint32_t*)(GPIO_BASE_ADDRESS);
     //Laut gpio.h ist gpio_out bei 0x0
