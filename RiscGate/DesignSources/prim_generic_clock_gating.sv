@@ -17,12 +17,13 @@ module prim_generic_clock_gating #(
   output logic clk_o
 );
 
-  logic en_latch /* verilator clock_enable */;
-  always_latch begin
-    if (!clk_i) begin
-      en_latch = en_i | test_en_i;
-    end
-  end
-  assign clk_o = en_latch & clk_i;
+  // GateMate has ONE global clock buffer. The latch+AND gate makes a second
+  // clock domain (~900 core flops) that cannot get it, so it lands on general
+  // routing: placement-dependent skew (core Fmax measured 13.8-32.7 MHz at a
+  // 10 MHz target) plus heavy routing congestion. core_clock_gate_i is only a
+  // sleep/power optimisation, so pass the clock through.
+  logic unused_en;
+  assign unused_en = en_i | test_en_i;
+  assign clk_o = clk_i;
 
 endmodule
