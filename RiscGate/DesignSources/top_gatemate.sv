@@ -24,7 +24,15 @@ module top_gatemate #(
  // output        SPI_SCK
 );
   logic clk_sys, rst_sys_n;
-  assign rst_sys_n = IO_RST_N;
+  // The board has no reset button and IO_RST_N is not wired to a pad, so it
+  // would float. Generate reset internally: hold low for 128 clocks after
+  // configuration, then release and saturate.
+  logic [7:0] por_cnt = 8'd0;
+  always @(posedge clk_sys) begin
+    if (!por_cnt[7]) por_cnt <= por_cnt + 8'd1;
+  end
+  assign rst_sys_n = por_cnt[7];
+  wire _unused_rst = IO_RST_N;
   // Instantiating the Ibex Demo System.
   ibex_demo_system #(
     .GpiWidth     ( 1            ), //Davor 8 wegen routing reduziert
