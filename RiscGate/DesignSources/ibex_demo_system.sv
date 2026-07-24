@@ -53,11 +53,11 @@ module ibex_demo_system #(
   localparam logic [31:0] DEBUG_MASK    = ~(DEBUG_SIZE-1);
   */
   //Uart kommt weg
-  /*
+
   localparam logic [31:0] UART_SIZE     =  4 * 1024; //  4 KiB
   localparam logic [31:0] UART_START    = 32'h80001000;
   localparam logic [31:0] UART_MASK     = ~(UART_SIZE-1);
-  */
+
   localparam logic [31:0] TIMER_SIZE    =  4 * 1024; //  4 KiB
   localparam logic [31:0] TIMER_START   = 32'h80002000;
   localparam logic [31:0] TIMER_MASK    = ~(TIMER_SIZE-1);
@@ -94,7 +94,7 @@ module ibex_demo_system #(
     //Pwm benutzen wir auch nicht
    // Pwm,
    //hier auch uart weg
-    //Uart,
+    Uart,
     Timer,
     //SPI hier auch entfernt
     //Spi,
@@ -104,7 +104,7 @@ module ibex_demo_system #(
   } bus_device_e;
   //Weil SPI und PWM entfernt wurde haben wir nurnoch 5 Devices ohne Debug, wir machen es aber konstant auf 5 weil wir keinen dbg brauchen
   //localparam int NrDevices = DBG ? 6 : 5;
-  localparam int NrDevices = 4;
+  localparam int NrDevices = 5;
   //localparam int NrDevices = DBG ? 8 : 7;
   //localparam int NrHosts   = DBG ? 2 : 1; 
   //Hier das selbe:
@@ -113,7 +113,7 @@ module ibex_demo_system #(
   // Interrupts.
   logic timer_irq;
   //kein interrupt mehr bei uart
-  //logic uart_irq;
+  logic uart_irq;
 
   // Host signals.
   logic        host_req      [NrHosts];
@@ -176,8 +176,8 @@ module ibex_demo_system #(
   assign cfg_device_addr_mask[Pwm]     = PWM_MASK;
   */
   //Uart auch hier raus
-  //assign cfg_device_addr_base[Uart]    = UART_START;
- // assign cfg_device_addr_mask[Uart]    = UART_MASK;
+  assign cfg_device_addr_base[Uart]    = UART_START;
+  assign cfg_device_addr_mask[Uart]    = UART_MASK;
   assign cfg_device_addr_base[Timer]   = TIMER_START;
   assign cfg_device_addr_mask[Timer]   = TIMER_MASK;
   //Hier brauchen wir dann SPI auch nicht mehr:
@@ -200,7 +200,7 @@ module ibex_demo_system #(
   //Auch hier PWM entfernen
   //assign device_err[Pwm]     = 1'b0;
   //Uart auch hier weg
-  //assign device_err[Uart]    = 1'b0;
+  assign device_err[Uart]    = 1'b0;
   //SPI auch hier entfernen
   //assign device_err[Spi]     = 1'b0;
   assign device_err[SimCtrl] = 1'b0;
@@ -392,7 +392,7 @@ module ibex_demo_system #(
   );
  */
  //Komplettes uart modul raus
- /*
+ 
   uart #(
     .ClockFrequency ( ClockFrequency ),
     .BaudRate       ( BaudRate       )
@@ -412,7 +412,7 @@ module ibex_demo_system #(
     .uart_irq_o     (uart_irq),
     .uart_tx_o
   );
-  */
+  
   //Komplettes SPI Modul kann raus:
   /*
   spi_top #(

@@ -32,7 +32,7 @@ int main(void){
     //Laut gpio.h ist gpio_out bei 0x0
     //*pointer_to_gpio = 0;+
     while(1){
-        puts("HAAAAALLLLLLLOOOOOOOOO");
+        putchar('A');
     }
 
 }

@@ -27,3 +27,13 @@ clk_test:
 
 synth_no_slang:
 	yosys -p "read_verilog -sv -formal $(DESIGN_SOURCES); synth_gatemate -top $(TOP) -luttree -nomx8; write_verilog $(TOP)_synth.v; write_json $(TOP)_synth_final.json"
+
+complete:
+	make -C C clean
+	make -C C 
+	python3 C/bin2svh.py C/firmware.bin DesignSources/firmware_mem_init.svh
+	rm -f .log.png Synth/.v Synth/.json Impl/impl.txt Impl/impl.bit Logs/*.log
+	yosys -m slang -p "read_slang --std latest --ignore-initial $(DESIGN_SOURCES) --top $(TOP) -D SYNTHESIS; synth_gatemate -top $(TOP) -luttree -nomx8; write_verilog Synth/$(TOP)_synth.v; write_json Synth/$(TOP)_synth_final.json" > Logs/synth.log
+	nextpnr-himbaechel $(IMPLEMENT_FLAGS) -o ccf=$(GATE_MATE_PIN_CONSTRAINTS) -o out=Impl/impl.txt --sdc $(GATE_MATE_TIMING_CONSTRAINTS) --router router2
+	gmpack Impl/impl.txt Impl/impl.bit
+	sudo /home/kasachstan_horse67/toolchains/oss-cad-suite/bin/openFPGALoader -c dirtyJtag Impl/impl.bit
