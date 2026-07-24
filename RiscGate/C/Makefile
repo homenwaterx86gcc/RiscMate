@@ -24,7 +24,7 @@ uart.o: uart.c
 demo_system.o: demo_system.c
 	$(COMPILER) $(FLAGS) -c demo_system.c -o demo_system.o
 clean:
-	rm main.o firmware.elf *.fst *.log *.csv
+	rm -f *.o firmware.elf *.fst *.log *.csv
 
 objdump:
 	$(PREFIX)objdump -d firmware.elf
